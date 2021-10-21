@@ -5,13 +5,16 @@ import Typewriter from './Typewriter';
 
 const App = () => {
   const [looping, setLooping] = useState(false);
-  const [textToType, setTextToType] = useState('');
+  const [textToType, setTextToType] = useState('Type me!');
   const [start, setStart] = useState(false);
+  const [wpm, setWPM] = useState(60);
 
   return (
     <main className={styles.app}>
       <div className={styles.container}>
-        {start && <Typewriter textToType={textToType} loop={looping} />}
+        {start && (
+          <Typewriter textToType={textToType} loop={looping} wpm={wpm} />
+        )}
       </div>
       <form className={styles.form}>
         <label htmlFor='typewriterInput' className={styles.label}>
@@ -25,6 +28,20 @@ const App = () => {
             value={textToType}
             onChange={(e) => setTextToType(e.target.value)}
             disabled={start}
+          />
+        </label>
+        <label htmlFor='wpm' className={styles.label}>
+          Words per minute (WPM)
+          <br />
+          <input
+            type='number'
+            name='wpm'
+            id='wpm'
+            step='5'
+            className={styles.textInput}
+            disabled={start}
+            value={wpm}
+            onChange={(e) => setWPM(e.target.value)}
           />
         </label>
         <label htmlFor='loopInput' className={styles.label}>
