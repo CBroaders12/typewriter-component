@@ -2,7 +2,9 @@ import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Typewriter.component.css';
 
-const Typewriter = ({ textToType, wpm, loop }) => {
+/* eslint-disable object-curly-newline */
+
+const Typewriter = ({ textToType, wpm, loop, pause }) => {
   const words = textToType.split(/\s+/);
   const averageWordLength =
     words.map((word) => word.length).reduce((a, b) => a + b) / words.length;
@@ -45,11 +47,14 @@ const Typewriter = ({ textToType, wpm, loop }) => {
         });
       }, delay);
     } else if (state.finished && loop) {
-      timeoutId = setTimeout(() => {
-        dispatch({
-          type: 'BACKSPACE',
-        });
-      }, delay / 2);
+      timeoutId = setTimeout(
+        () => {
+          dispatch({
+            type: 'BACKSPACE',
+          });
+        },
+        state.text.length === textToType.length ? pause * 1000 : delay / 2
+      );
     }
 
     return () => timeoutId && clearTimeout(timeoutId);
@@ -67,11 +72,13 @@ Typewriter.propTypes = {
   textToType: PropTypes.string.isRequired,
   loop: PropTypes.bool,
   wpm: PropTypes.number,
+  pause: PropTypes.number,
 };
 
 Typewriter.defaultProps = {
   loop: false,
   wpm: 100,
+  pause: 1,
 };
 
 export default Typewriter;
