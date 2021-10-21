@@ -1,0 +1,13 @@
+.typewriter {
+  font-family: 'Courier New', Courier, monospace;
+  position: relative;
+}
+
+.cursorBar {
+  background-color: black;
+  height: 2rem;
+  width: 2px;
+  position: relative;
+  bottom: -0.2rem;
+  display: inline-block;
+}

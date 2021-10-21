@@ -1,10 +1,17 @@
 import React, { useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
+import styles from './Typewriter.component.css';
 
-const Typewriter = ({ textToType, delay }) => {
+const Typewriter = ({ textToType, wpm, loop }) => {
+  const words = textToType.split(/\s+/);
+  const averageWordLength =
+    words.map((word) => word.length).reduce((a, b) => a + b) / words.length;
+  const delay = Math.round(1 / ((wpm / 60 / 1000) * averageWordLength));
+
   const initialState = {
     text: '',
     currentIndex: 0,
+    finished: false,
   };
 
   const typewriterReducer = (state, action) => {
@@ -13,11 +20,13 @@ const Typewriter = ({ textToType, delay }) => {
         return {
           text: state.text + action.payload[state.currentIndex],
           currentIndex: state.currentIndex + 1,
+          finished: state.text.length === action.payload.length - 1,
         };
       case 'BACKSPACE':
         return {
           text: state.text.slice(0, -1),
           currentIndex: state.currentIndex - 1,
+          finished: state.currentIndex !== 1,
         };
       default:
         return state;
@@ -28,47 +37,41 @@ const Typewriter = ({ textToType, delay }) => {
 
   useEffect(() => {
     let timeoutId;
-    if (state.text.length < textToType.length) {
+    if (!state.finished) {
       timeoutId = setTimeout(() => {
         dispatch({
           type: 'TYPE',
           payload: textToType,
         });
       }, delay);
+    } else if (state.finished && loop) {
+      timeoutId = setTimeout(() => {
+        dispatch({
+          type: 'BACKSPACE',
+        });
+      }, delay / 2);
     }
 
-    return () => {
-      return timeoutId && clearTimeout(timeoutId);
-    };
+    return () => timeoutId && clearTimeout(timeoutId);
   }, [state]);
 
   return (
-    <h1 style={{ position: 'relative' }}>
+    <h1 className={styles.typewriter}>
       {state.text}
-      <span
-        style={{
-          backgroundColor: 'black',
-          height: '2rem',
-          width: '0.1rem',
-          position: 'relative',
-          bottom: '-0.2rem',
-          display: 'inline-block',
-        }}
-      />
+      <span className={styles.cursorBar} />
     </h1>
   );
 };
 
 Typewriter.propTypes = {
-  textToType: PropTypes.string,
-  // loop: PropTypes.bool,
-  delay: PropTypes.number,
+  textToType: PropTypes.string.isRequired,
+  loop: PropTypes.bool,
+  wpm: PropTypes.number,
 };
 
 Typewriter.defaultProps = {
-  textToType: 'Default String',
-  // loop: false,
-  delay: 200,
+  loop: false,
+  wpm: 100,
 };
 
 export default Typewriter;
