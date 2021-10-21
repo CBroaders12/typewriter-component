@@ -42,7 +42,21 @@ const Typewriter = ({ textToType, delay }) => {
     };
   }, [state]);
 
-  return <h1>{state.text}</h1>;
+  return (
+    <h1 style={{ position: 'relative' }}>
+      {state.text}
+      <span
+        style={{
+          backgroundColor: 'black',
+          height: '2rem',
+          width: '0.1rem',
+          position: 'relative',
+          bottom: '-0.2rem',
+          display: 'inline-block',
+        }}
+      />
+    </h1>
+  );
 };
 
 Typewriter.propTypes = {
