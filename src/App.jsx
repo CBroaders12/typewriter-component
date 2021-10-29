@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import Typewriter from 'react-looping-typewriter';
 import styles from './app.component.css';
 
-import Typewriter from './Typewriter';
+// import Typewriter from './Typewriter';
 
 const App = () => {
   const [looping, setLooping] = useState(false);

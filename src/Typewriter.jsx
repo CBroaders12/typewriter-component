@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styles from './Typewriter.component.css';
 
 /* eslint-disable object-curly-newline */
-
 const Typewriter = ({ textToType, wpm, loop, pause }) => {
   const words = textToType.split(/\s+/);
   const averageWordLength =
@@ -53,6 +52,7 @@ const Typewriter = ({ textToType, wpm, loop, pause }) => {
             type: 'BACKSPACE',
           });
         },
+        // Pause for "pause" seconds before deleting the line
         state.text.length === textToType.length ? pause * 1000 : delay / 2
       );
     }
